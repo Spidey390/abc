@@ -1,0 +1,33 @@
+Step 1 — Open MongoDB shell and create DB
+use employee_management
+
+Step 2 — Insert records (with intentional bad data)
+db.employees.insertMany([
+{ emp_id: 1, name: "Tamil", email: "tamil@gmail.com", dept: "HR" },
+{ emp_id: 2, name: "Barath", email: null, dept: "IT" },
+{ emp_id: 3, name: "Dhanush", email: "dhanush@gmail.com", dept: "Finance" },
+{ emp_id: 4, name: "Surya", email: "tamil@gmail.com", dept: "IT" }
+])
+
+Step 3 — Find NULL emails
+db.employees.find({ email: null })
+db.employees.countDocuments({ email: null })
+
+Step 4 — Find duplicate emails
+db.employees.aggregate([
+{ $group: { _id: "$email", count: { $sum: 1 } } },
+{ $match: { count: { $gt: 1 } } }
+])
+
+Step 5 — Fix the bad data
+db.employees.updateOne({ emp_id: 2 }, { $set: { email: "barath@gmail.com" } })
+db.employees.updateOne({ emp_id: 4 }, { $set: { email: "surya@gmail.com" } })
+
+Step 6 — Apply unique constraint
+db.employees.createIndex({ email: 1 }, { unique: true })
+
+Step 7 — Test the constraint (should fail)
+db.employees.insertOne({ emp_id: 5, name: "Kavi", email: "tamil@gmail.com", dept: "HR" })
+
+Step 8 — Final check
+db.employees.find().pretty()
