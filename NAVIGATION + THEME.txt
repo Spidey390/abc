@@ -1,0 +1,30 @@
+import 'package:flutter/material.dart';
+void main()=>runApp(MyApp());
+
+class MyApp extends StatelessWidget{
+ Widget build(c){
+  return MaterialApp(
+   theme: ThemeData(primarySwatch: Colors.blue),
+   home: Page1(),
+  );
+ }
+}
+
+class Page1 extends StatelessWidget{
+ Widget build(c){
+  return Scaffold(
+   appBar: AppBar(title: Text("Page1")),
+   body: ElevatedButton(
+    onPressed:()=>Navigator.push(c,
+     MaterialPageRoute(builder:(_)=>Page2())),
+    child: Text("Next")),
+  );
+ }
+}
+
+class Page2 extends StatelessWidget{
+ Widget build(c){
+  return Scaffold(
+   appBar: AppBar(title: Text("Page2")));
+ }
+}
