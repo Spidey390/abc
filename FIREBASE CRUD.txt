@@ -1,0 +1,34 @@
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+void main()=>runApp(MaterialApp(home:App()));
+
+class App extends StatelessWidget{
+ final db=FirebaseFirestore.instance;
+
+ Widget build(c){
+  return Scaffold(
+   appBar: AppBar(title: Text("Firebase")),
+   floatingActionButton: FloatingActionButton(
+    onPressed:()=>db.collection("data")
+     .add({"name":"A"}),
+    child: Icon(Icons.add),
+   ),
+   body: StreamBuilder(
+    stream: db.collection("data").snapshots(),
+    builder:(c,s){
+     if(!s.hasData) return Text("Loading");
+     return ListView(
+      children: s.data!.docs.map((d)=>ListTile(
+       title: Text(d["name"]),
+       trailing: IconButton(
+        icon: Icon(Icons.delete),
+        onPressed:()=>db.collection("data")
+         .doc(d.id).delete(),
+       ),
+      )).toList(),
+     );
+    }),
+  );
+ }
+}
